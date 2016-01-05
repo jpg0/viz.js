@@ -1,11 +1,12 @@
 importScripts("bower_components/viz.js/viz.js");
 
+var PARSE_TOKEN = "#JS"
+
 preprocess = function(str) {
-	var matches = str.match(/\/\* *replacements([\s\S]*)\*\//);
+	var replacements = {};
+	var matches = str.match(/\/\* *#JS([\s\S]*)\*\//);
 	if(matches){
-		var replacements = JSON.parse(matches[1].trim());
-	} else {
-		var replacements = {};
+		eval(matches[1].trim());
 	}
  
 	for (var key in replacements) {
