@@ -227,6 +227,21 @@ digraph G {
     var worker;
     var result;
 
+    var preprocess = function(str) {
+    	var replacements = {};
+    	var matches = str.match(/\/\* *#JS([\s\S]*)\*\//);
+    	if(matches){
+    		eval(matches[1].trim());
+    	}
+     
+    	for (var key in replacements) {
+      		if (replacements.hasOwnProperty(key)) {
+    			str = str.replace(new RegExp('\\$'+key, 'g'), replacements[key]);
+      		}
+    	}
+    	return str;
+    };
+	    
     function updateGraph() {
       if (worker) {
         worker.terminate();
@@ -264,7 +279,7 @@ digraph G {
       }
       
       var params = {
-        src: editor.getSession().getDocument().getValue(),
+        src: preprocess(editor.getSession().getDocument().getValue()),
         options: {
           engine: document.querySelector("#engine select").value,
           format: document.querySelector("#format select").value
